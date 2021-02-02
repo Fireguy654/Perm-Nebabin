@@ -1,26 +1,28 @@
 import random
 import sys
 
+from UI import Ui_Form
+
 from PyQt5 import uic, QtGui
 from PyQt5.QtGui import QPainter, QColor
 from PyQt5.QtWidgets import QWidget, QApplication
 
 
-class MyWindow(QWidget):
+class MyWindow(Ui_Form, QWidget):
     def __init__(self):
         super().__init__()
+        self.setupUi(self)
 
         self.circles = []
 
         self.initUI()
 
     def initUI(self):
-        uic.loadUi('UI.ui', self)
-
         self.btn.clicked.connect(self.add_circle)
 
     def add_circle(self):
-        self.circles.append((random.randint(1, 900), random.randint(1, 700), random.randint(1, 50)))
+        self.circles.append((random.randint(1, 900), random.randint(1, 700), random.randint(1, 50),
+                             (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))))
         self.repaint()
 
     def paintEvent(self, a0: QtGui.QPaintEvent) -> None:
@@ -31,8 +33,8 @@ class MyWindow(QWidget):
 
     def paint_circles(self, qp):
         for i in self.circles:
-            qp.setPen(QColor(255, 255, 0))
-            qp.drawEllipse(i[0] - i[2], i[1] - i[2], i[2] * 2, i[2] *2)
+            qp.setPen(QColor(*i[3]))
+            qp.drawEllipse(i[0] - i[2], i[1] - i[2], i[2] * 2, i[2] * 2)
 
 
 def except_hook(cls, exception, traceback):
