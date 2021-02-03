@@ -1,22 +1,23 @@
 import sys
 
-from PyQt5 import uic
+from addEditCoffeeForm import Ui_Dialog
+from mainui import Ui_Form
+
 from PyQt5.QtSql import *
 from PyQt5.QtWidgets import *
 import sqlite3
 
 
-class TableChange(QDialog):
+class TableChange(QDialog, Ui_Dialog):
     def __init__(self):
         super().__init__()
+        self.setupUi(self)
         self.setModal(True)
 
         self.initUI()
 
     def initUI(self):
-        uic.loadUi('addEditCoffeeForm.ui', self)
-
-        self.con = sqlite3.connect('coffee.sqlite')
+        self.con = sqlite3.connect('data/coffee.sqlite')
         self.cur = self.con.cursor()
 
         self.add.clicked.connect(self.insert_in_db)
@@ -66,16 +67,15 @@ class TableChange(QDialog):
         self.con.commit()
 
 
-class Table(QWidget):
+class Table(QWidget, Ui_Form):
     def __init__(self):
         super().__init__()
+        self.setupUi(self)
         self.initUI()
 
     def initUI(self):
-        uic.loadUi('main.ui', self)
-
         self.db = QSqlDatabase.addDatabase('QSQLITE')
-        self.db.setDatabaseName('coffee.sqlite')
+        self.db.setDatabaseName('data/coffee.sqlite')
         self.db.open()
 
         self.model = QSqlTableModel(self, self.db)
